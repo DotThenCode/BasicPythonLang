@@ -74,6 +74,22 @@ class Lexer:
         return result
 
 #####################################
+#  NODES                            #
+#####################################
+
+class ProgramTree(object):
+    def __init__(self, statements):
+        self.statements = statements
+
+class PrintNode(object):
+    def __init__(self, node):
+        self.node = node
+
+class StringNode(object):
+    def __init__(self, tok):
+        self.tok = tok
+
+#####################################
 #  PARSER                           #
 #####################################
 
@@ -89,19 +105,34 @@ class Parser:
             return tok
 
     def parse(self):
-        self.program()
+        return self.program()
 
     #################################
 
     def program(self):
-        self.statements()
+        return ProgramTree(self.statements())
 
     def statements(self):
+        statements = []
         while self.tok_index < len(self.tokens):
             func_tok = self.eat(IDENTIFIER)
             if func_tok.value.upper() == "PRINT":
                 string = self.eat(STRING)
-                print string.value
+                statements.append(PrintNode(StringNode(string)))
+        return statements
+
+#####################################
+#  INTERPRETER                      #
+#####################################
+
+class Interpreter(object):
+    def visitProgramTree(self, tree):
+        for node in tree.statements:
+            if isinstance(node, PrintNode):
+                self.visitPrintNode(node)
+
+    def visitPrintNode(self, node):
+        print node.node.tok.value
 
 #####################################
 #  MAIN                             #
@@ -114,4 +145,6 @@ f.close()
 lexer = Lexer(data)
 tokens = lexer.make_tokens()
 parser = Parser(tokens)
-parser.parse()
+tree = parser.parse()
+interpreter = Interpreter()
+interpreter.visitProgramTree(tree)
