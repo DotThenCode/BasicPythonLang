@@ -1,0 +1,2 @@
+LET A = "This is a variable"
+PRINT A
