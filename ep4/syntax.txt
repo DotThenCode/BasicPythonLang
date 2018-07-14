@@ -1,5 +1,0 @@
-program: statements
-statements: statement*
-statement: func-call | variable-declaration
-func-call: IDENTIFIER STRING
-variable-declaration: IDENTIFIER(LET) IDENTIFIER EQ STRING
