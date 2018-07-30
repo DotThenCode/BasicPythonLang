@@ -1,0 +1,6 @@
+program: statements
+statements: statement*
+statement: variable-declaration | func-call
+variable-declaration: IDENTIFIER(LET) IDENTIFIER EQ expr
+func-call: IDENTIFIER expr
+expr: STRING | IDENTIFIER
